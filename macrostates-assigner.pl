@@ -47,8 +47,8 @@ open (LOG, ">", $logFilename) or die "Cannot open $logFilename. $!\n";
 our $timeColumn = 4;
 our $rmsdColumn = 5;
 our $rgColumn = 6;
-our $ncColumn = 11;
-our $nncColumn = 12;
+our $ncColumn = 12;
+our $nncColumn = 13;
 
 while (my $line = <INPUT>) {
     chomp($line);

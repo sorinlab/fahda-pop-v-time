@@ -22,7 +22,6 @@ print "\tOutput: $outputFilename\n";
 print "\tLog: $logFilename\n";
 
 #...............................................................................
-our @macrostates = ();
 our @timeFrames = ();
 our %macrostatePopulationPerTimeFrame = ();
 # Total population for a time frame of all macrostates
@@ -42,7 +41,6 @@ while (my $line = <INPUT>) {
     push(@timeFrames, $timeFrame);
 
     my $macrostate = $values[$#values];
-    push(@macrostates, $macrostate);
     if (!exists $totalPopulationPerTimeFrame{$macrostate} ||
         !defined $totalPopulationPerTimeFrame{$macrostate}) {
         $totalPopulationPerTimeFrame{$macrostate} = 0;
@@ -57,11 +55,12 @@ while (my $line = <INPUT>) {
 }
 
 @timeFrames = sort {$a <=> $b} +(uniq @timeFrames);
-@macrostates = sort +(uniq @macrostates);
-foreach my $macrostate (keys %totalPopulationPerTimeFrame) {
+our @macrostates = sort +(uniq keys %totalPopulationPerTimeFrame);
+print "\nTotal population per time frame:\n";
+foreach my $macrostate (sort keys %totalPopulationPerTimeFrame) {
     print $macrostate, ": ", $totalPopulationPerTimeFrame{$macrostate}, "\n";
 }
-exit;
+
 #...............................................................................
 open (OUTPUT, ">", $outputFilename)
 or die "Cannot write to output file $outputFilename. $!.\n";
@@ -70,8 +69,8 @@ for (my $i = 0; $i <= $#macrostates; $i++) {
 	my $macrostate = $macrostates[$i];
 	for (my $j = 0; $j <= $#timeFrames; $j++) {
 		my $timeFrame = $timeFrames[$j];
-		my $population = $macrostatePopulationPerTimeFrame{"$macrostate-$timeFrame"} / $totalPopulationPerTimeFrame{$timeFrame};
-		printf OUTPUT "% 5.2f\t", $population;
+		my $population = $macrostatePopulationPerTimeFrame{"$macrostate-$timeFrame"} / $totalPopulationPerTimeFrame{$macrostate};
+		printf OUTPUT "% 10.5f\t", $population;
 	}
 	print OUTPUT "\n";
 }
