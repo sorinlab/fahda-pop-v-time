@@ -10,21 +10,26 @@ use strict;
 #          whose values in these boundaries are labeled with their respective
 #          macrostate name.
 #
+our $usage = "$0  <inputFilename> <cutoffTimeInPs> <outputFilename>  <logFilename}";
+if (scalar(@ARGV) == 0) {
+    print "Usage: $usage\n";
+    exit;
+}
+
+our $inputFilename = $ARGV[0];
+our $cutoffTimeInPs = $ARGV[1];
+our $outputFilename = $ARGV[2];
+our $logFilename = $ARGV[3];
 
 our $maxRMSD = 32.660;
 our $maxRg = 34.398;
 our $maxNC = 1101.77;
 our $maxNNC = 1930;
-our $cutOffTimeInPicoSeconds = 6000;
-
-our $inputFilename = $ARGV[0];
-our $outputFilename = $ARGV[1];
-our $logFilename = $ARGV[2];
 
 #...............................................................................
 open (INPUT, "<", $inputFilename) or die "Cannot open $inputFilename. $!\n";
-open (LOG, ">", $logFilename) or die "Cannot open $logFilename. $!\n";
 open (OUTPUT, ">", $outputFilename) or die "Cannot open $outputFilename. $!\n";
+open (LOG, ">", $logFilename) or die "Cannot open $logFilename. $!\n";
 
 #...............................................................................
 our $timeColumn = 000; #TODO
@@ -39,7 +44,7 @@ while (my $line = <INPUT>) {
     my @items = split(/\s+/, $line);
     my $time  = $items[$timeColumn];
 
-    if ($time < $cutOffTimeInPicoSeconds) { next; }
+    if ($time < $cutoffTimeInPs) { next; }
 
     my $rmsd    = $items[$rmsdColumn];
     my $rg      = $items[$rgColumn];

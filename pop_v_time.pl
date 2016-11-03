@@ -7,20 +7,15 @@ use List::MoreUtils qw(any uniq);
 # Nov 2016
 #
 
-our $usage = "$0  <inputFilename>  <outputFilename>  [logFilename]";
-
-our $inputFilename = $ARGV[0];
-our $outputFilename = $ARGV[1];
-
-our $logFilename = "";
-if (scalar(@ARGV) == 3){
-    $logFilename = $ARGV[2];
-}
-
-if (scalar(@ARGV) == 0 || $ARGV[0] eq "-h") {
+our $usage = "$0  <inputFilename>  <outputFilename>  <logFilename}";
+if (scalar(@ARGV) == 0) {
     print "Usage: $usage\n";
     exit;
 }
+
+our $inputFilename = $ARGV[0];
+our $outputFilename = $ARGV[1];
+our $logFilename = $ARGV[2];
 
 print "\tInput:  $inputFilename\n";
 print "\tOutput: $outputFilename\n";
