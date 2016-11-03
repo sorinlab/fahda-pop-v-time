@@ -32,14 +32,27 @@ open (OUTPUT, ">", $outputFilename) or die "Cannot open $outputFilename. $!\n";
 open (LOG, ">", $logFilename) or die "Cannot open $logFilename. $!\n";
 
 #...............................................................................
-our $timeColumn = 000; #TODO
-our $rmsdColumn = 111; #TODO
-our $rgColumn = 222; #TODO
-our $ncColumn = 333; #TODO
-our $nncColumn = 444; #TODO
+#fahdata@sorin2 ~/PKNOT/analysis/clustering/pop-v-time/scripts
+#$ head ~/PKNOT/analysis/clustering/kmeans-clustering-results/final_LUTEO_kmeans_with_new_native_contacts.txt
+#0     1796        0        0      100    1.312    12.191   395       242        10       166       334      1147         0
+#0     1796        0        0      200    1.139    12.355   460       212        10       178       355      1215         0
+#0     1796        0        0      300    1.051    12.355   396       225         8       163       283      1075         0
+#0     1796        0        0      400    1.682    12.517   393       204         7       143       301      1048         0
+#0     1796        0        0      500    2.023    12.678   385       180         6       150       317      1038         0
+#0     1796        0        0      600    1.752    12.546   415       196         4       174       322      1111         0
+#0     1796        0        0      700    2.035    12.748   373       180         2       150       278       983         0
+#0     1796        0        0      800    1.677    12.481   414       178         8       172       305      1077         0
+#0     1796        0        0      900    1.468    12.463   417       214         6       159       284      1080         0
+#0     1796        0        0     1000    1.661    12.418   392       194         6       176       230       998         0
+our $timeColumn = 4;
+our $rmsdColumn = 5;
+our $rgColumn = 6;
+our $ncColumn = 11;
+our $nncColumn = 12;
 
 while (my $line = <INPUT>) {
-    my $OriginalLine = chomp($line);
+    chomp($line);
+    my $OriginalLine = $line;
 
     my @items = split(/\s+/, $line);
     my $time  = $items[$timeColumn];

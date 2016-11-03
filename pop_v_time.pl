@@ -20,7 +20,6 @@ our $logFilename = $ARGV[2];
 print "\tInput:  $inputFilename\n";
 print "\tOutput: $outputFilename\n";
 print "\tLog: $logFilename\n";
-exit;
 
 #...............................................................................
 our @macrostates = ();
@@ -33,16 +32,16 @@ our %totalPopulationPerTimeFrame = ();
 #...............................................................................
 open(INPUT, '<', $inputFilename)
 or die "ERROR: Cannot open input file $inputFilename. $!.\n";
-our $timeColumn = 000; #TODO
-our $macrostateColumn = 111; #TODO
+our $timeColumn = 4;
 
 while (my $line = <INPUT>) {
-	my @values = split(/\s+/, chomp($line));
+    chomp($line);
+	my @values = split(/\s+/, $line);
 
     my $timeFrame = $values[$timeColumn];
     push(@timeFrames, $timeFrame);
 
-    my $macrostate = $values[$macrostateColumn];
+    my $macrostate = $values[$#values];
     push(@macrostates, $macrostate);
     if (!exists $totalPopulationPerTimeFrame{$macrostate} ||
         !defined $totalPopulationPerTimeFrame{$macrostate}) {
@@ -57,9 +56,12 @@ while (my $line = <INPUT>) {
 	$macrostatePopulationPerTimeFrame{"$macrostate-$timeFrame"} += 1;
 }
 
-@timeFrames = sort {$a <=> $b} uniq @timeFrames;
-@macrostates = sort uniq @macrostates;
-
+@timeFrames = sort {$a <=> $b} +(uniq @timeFrames);
+@macrostates = sort +(uniq @macrostates);
+foreach my $macrostate (keys %totalPopulationPerTimeFrame) {
+    print $macrostate, ": ", $totalPopulationPerTimeFrame{$macrostate}, "\n";
+}
+exit;
 #...............................................................................
 open (OUTPUT, ">", $outputFilename)
 or die "Cannot write to output file $outputFilename. $!.\n";
