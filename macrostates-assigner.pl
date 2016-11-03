@@ -1,3 +1,6 @@
+#!/usr/bin/perl -w
+use strict;
+
 #
 # Khai Nguyen <nguyenkhai101@gmail.com>
 # Nov 2016
@@ -7,9 +10,6 @@
 #          whose values in these boundaries are labeled with their respective
 #          macrostate name.
 #
-
-#!/usr/bin/perl -w
-use warnings;
 
 our $maxRMSD = 32.660;
 our $maxRg = 34.398;
@@ -27,19 +27,24 @@ open (LOG, ">", $logFilename) or die "Cannot open $logFilename. $!\n";
 open (OUTPUT, ">", $outputFilename) or die "Cannot open $outputFilename. $!\n";
 
 #...............................................................................
-while (my $line = <INPUT>) {
-    my $OriginalLine = $line;
+our $timeColumn = 000; #TODO
+our $rmsdColumn = 111; #TODO
+our $rgColumn = 222; #TODO
+our $ncColumn = 333; #TODO
+our $nncColumn = 444; #TODO
 
-    foreach ($line) { s/^\s+//; s/\s+$//; s/\s+/ /g; }
-    my @items = split(' ', $line);
-    my $time  = $items[4];
+while (my $line = <INPUT>) {
+    my $OriginalLine = chomp($line);
+
+    my @items = split(/\s+/, $line);
+    my $time  = $items[$timeColumn];
 
     if ($time < $cutOffTimeInPicoSeconds) { next; }
 
-    my $rmsd    = $items[5];  # RMSD
-    my $rg      = $items[6];  # Rg
-    my $nc      = $items[12]; # Native contacts
-    my $nnc     = $items[13]; # Non-native contacts
+    my $rmsd    = $items[$rmsdColumn];
+    my $rg      = $items[$rgColumn];
+    my $nc      = $items[$ncColumn];
+    my $nnc     = $items[$nncColumn];
 
     # Extract State A/F1    SAME
     if (IsBetweenMinMax($rmsd, 0.0, 3.0)) {
@@ -121,7 +126,9 @@ close LOG;
 
 sub IsBetweenMinMax
 {
-    local($number, $min, $max) = @_;
+    my $number = $_[0];
+    my $min = $_[1];
+    my $max = $_[2];
     my $numberIsBetweenMinMax = 0;
     if ($number >= $min && $number < $max) { $numberIsBetweenMinMax = 1; }
     return $numberIsBetweenMinMax;
