@@ -1,13 +1,13 @@
 #!/usr/bin/perl
 use strict;
-use List::MoreUtils qw(any uniq);
+use List::MoreUtils qw(uniq);
 
 #
 # Khai Nguyen <nguyenkhai101@gmail.com>
 # Nov 2016
 #
 
-our $usage = "$0  <inputFilename>  <outputFilename>  <logFilename}";
+our $usage = "$0  <inputFilename>  <outputFilename>}";
 if (scalar(@ARGV) == 0) {
     print "Usage: $usage\n";
     exit;
@@ -15,11 +15,9 @@ if (scalar(@ARGV) == 0) {
 
 our $inputFilename = $ARGV[0];
 our $outputFilename = $ARGV[1];
-our $logFilename = $ARGV[2];
 
-print "\tInput:  $inputFilename\n";
-print "\tOutput: $outputFilename\n";
-print "\tLog: $logFilename\n";
+print STDOUT "\tInput:  $inputFilename\n";
+print STDOUT "\tOutput: $outputFilename\n";
 
 #...............................................................................
 our @timeFrames = ();
@@ -41,6 +39,7 @@ while (my $line = <INPUT>) {
     push(@timeFrames, $timeFrame);
 
     my $macrostate = $values[$#values];
+    if ($macrostate eq "X") { next; } #ignore non-macrostate datapoints
     if (!exists $totalPopulationPerTimeFrame{$macrostate} ||
         !defined $totalPopulationPerTimeFrame{$macrostate}) {
         $totalPopulationPerTimeFrame{$macrostate} = 0;
@@ -56,9 +55,9 @@ while (my $line = <INPUT>) {
 
 @timeFrames = sort {$a <=> $b} +(uniq @timeFrames);
 our @macrostates = sort +(uniq keys %totalPopulationPerTimeFrame);
-print "\nTotal population per time frame:\n";
+print STDOUT "\nTotal population per time frame:\n";
 foreach my $macrostate (sort keys %totalPopulationPerTimeFrame) {
-    print $macrostate, ": ", $totalPopulationPerTimeFrame{$macrostate}, "\n";
+    print STDOUT $macrostate, ": ", $totalPopulationPerTimeFrame{$macrostate}, "\n";
 }
 
 #...............................................................................

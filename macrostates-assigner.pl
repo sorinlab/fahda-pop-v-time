@@ -10,7 +10,7 @@ use strict;
 #          whose values in these boundaries are labeled with their respective
 #          macrostate name.
 #
-our $usage = "$0  <inputFilename> <cutoffTimeInPs> <outputFilename>  <logFilename}";
+our $usage = "$0  <inputFilename> <cutoffTimeInPs> <outputFilename>}";
 if (scalar(@ARGV) == 0) {
     print "Usage: $usage\n";
     exit;
@@ -19,7 +19,6 @@ if (scalar(@ARGV) == 0) {
 our $inputFilename = $ARGV[0];
 our $cutoffTimeInPs = $ARGV[1];
 our $outputFilename = $ARGV[2];
-our $logFilename = $ARGV[3];
 
 our $maxRMSD = 32.660;
 our $maxRg = 34.398;
@@ -29,7 +28,6 @@ our $maxNNC = 1930;
 #...............................................................................
 open (INPUT, "<", $inputFilename) or die "Cannot open $inputFilename. $!\n";
 open (OUTPUT, ">", $outputFilename) or die "Cannot open $outputFilename. $!\n";
-open (LOG, ">", $logFilename) or die "Cannot open $logFilename. $!\n";
 
 #...............................................................................
 #fahdata@sorin2 ~/PKNOT/analysis/clustering/pop-v-time/scripts
@@ -54,15 +52,15 @@ while (my $line = <INPUT>) {
     chomp($line);
     my $OriginalLine = $line;
 
-    my @items = split(/\s+/, $line);
-    my $time  = $items[$timeColumn];
+    my @values = split(/\s+/, $line);
+    my $time  = $values[$timeColumn];
 
     if ($time < $cutoffTimeInPs) { next; }
 
-    my $rmsd    = $items[$rmsdColumn];
-    my $rg      = $items[$rgColumn];
-    my $nc      = $items[$ncColumn];
-    my $nnc     = $items[$nncColumn];
+    my $rmsd    = $values[$rmsdColumn];
+    my $rg      = $values[$rgColumn];
+    my $nc      = $values[$ncColumn];
+    my $nnc     = $values[$nncColumn];
 
     # Extract State A/F1    SAME
     if (IsBetweenMinMax($rmsd, 0.0, 3.0)) {
@@ -140,10 +138,8 @@ while (my $line = <INPUT>) {
 
 close INPUT;
 close OUTPUT;
-close LOG;
 
-sub IsBetweenMinMax
-{
+sub IsBetweenMinMax {
     my $number = $_[0];
     my $min = $_[1];
     my $max = $_[2];
