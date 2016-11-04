@@ -20,7 +20,7 @@ print STDOUT "\tInput:  $inputFilename\n";
 print STDOUT "\tOutput: $outputFilename\n";
 
 #...............................................................................
-our @timeFrames = ();
+our @macrostates = ();
 our %macrostatePopulationPerTimeFrame = ();
 # Total population for a time frame of all macrostates
 # Will be used for normalization
@@ -36,15 +36,15 @@ while (my $line = <INPUT>) {
 	my @values = split(/\s+/, $line);
 
     my $timeFrame = $values[$timeColumn];
-    push(@timeFrames, $timeFrame);
+    if (!exists $totalPopulationPerTimeFrame{$timeFrame} ||
+        !defined $totalPopulationPerTimeFrame{$timeFrame}) {
+        $totalPopulationPerTimeFrame{$timeFrame} = 0;
+    }
+    $totalPopulationPerTimeFrame{$timeFrame} += 1;
 
     my $macrostate = $values[$#values];
     if ($macrostate eq "X") { next; } #ignore non-macrostate datapoints
-    if (!exists $totalPopulationPerTimeFrame{$macrostate} ||
-        !defined $totalPopulationPerTimeFrame{$macrostate}) {
-        $totalPopulationPerTimeFrame{$macrostate} = 0;
-    }
-    $totalPopulationPerTimeFrame{$macrostate} += 1;
+    push(@macrostates, $macrostate);
 
     if (!exists $macrostatePopulationPerTimeFrame{"$macrostate-$timeFrame"} ||
         !defined $macrostatePopulationPerTimeFrame{"$macrostate-$timeFrame"}) {
@@ -53,12 +53,8 @@ while (my $line = <INPUT>) {
 	$macrostatePopulationPerTimeFrame{"$macrostate-$timeFrame"} += 1;
 }
 
-@timeFrames = sort {$a <=> $b} +(uniq @timeFrames);
-our @macrostates = sort +(uniq keys %totalPopulationPerTimeFrame);
-print STDOUT "\nTotal population per time frame:\n";
-foreach my $macrostate (sort keys %totalPopulationPerTimeFrame) {
-    print STDOUT $macrostate, ": ", $totalPopulationPerTimeFrame{$macrostate}, "\n";
-}
+our @timeFrames = sort {$a <=> $b} +(uniq keys %totalPopulationPerTimeFrame);
+@macrostates = sort +(uniq @macrostates);
 
 #...............................................................................
 open (OUTPUT, ">", $outputFilename)
