@@ -64,7 +64,7 @@ for (my $i = 0; $i <= $#macrostates; $i++) {
 	my $macrostate = $macrostates[$i];
 	for (my $j = 0; $j <= $#timeFrames; $j++) {
 		my $timeFrame = $timeFrames[$j];
-		my $population = $macrostatePopulationPerTimeFrame{"$macrostate-$timeFrame"} / $totalPopulationPerTimeFrame{$macrostate};
+		my $population = $macrostatePopulationPerTimeFrame{"$macrostate-$timeFrame"} / $totalPopulationPerTimeFrame{$timeFrame};
 		printf OUTPUT "% 10.5f\t", $population;
 	}
 	print OUTPUT "\n";
